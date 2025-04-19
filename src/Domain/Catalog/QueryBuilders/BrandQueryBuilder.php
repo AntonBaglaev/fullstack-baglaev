@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Domain\Catalog\QueryBuilders;
 
 use Illuminate\Database\Eloquent\Builder;
