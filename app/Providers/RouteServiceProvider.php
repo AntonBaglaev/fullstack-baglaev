@@ -2,16 +2,22 @@
 
 namespace App\Providers;
 
+use App\Contracts\RouteRegistrar;
+use App\Routing\AppRegistrar;
+use App\Routing\AuthRegistrar;
+use App\Routing\CatalogRegistrar;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Contracts\Routing\Registrar;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\Facades\Route;
+use RuntimeException;
 
 class RouteServiceProvider extends ServiceProvider
 {
     /**
-     * The path to the "home" route for your application.
+     * The path to your application's "home" route.
      *
      * Typically, users are redirected here after authentication.
      *
@@ -22,27 +28,46 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Define your route model bindings, pattern filters, and other route configuration.
      */
+    protected array $registrars = [
+        AppRegistrar::class,
+        AuthRegistrar::class,
+        CatalogRegistrar::class
+    ];
+
+
     public function boot(): void
     {
-        $this->configureRateLimiting();
-
-        $this->routes(function () {
-            Route::middleware('api')
-                ->prefix('api')
-                ->group(base_path('routes/api.php'));
-
-            Route::middleware('web')
-                ->group(base_path('routes/web.php'));
+        RateLimiter::for('global', function (Request $request) {
+            return Limit::perMinute(500)
+                ->by($request->user()?->id ?: $request->ip())
+                ->response(function (Request $request, array $headers) {
+                    return response('Take it easy', Response::HTTP_TOO_MANY_REQUESTS, $headers);
+                });
         });
-    }
 
-    /**
-     * Configure the rate limiters for the application.
-     */
-    protected function configureRateLimiting(): void
-    {
+        RateLimiter::for('auth', function(Request $request) {
+            return Limit::perMinute(20)->by($request->ip());
+        });
+
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
+
+        $this->routes(function (Registrar $router) {
+            $this->mapRoutes($router, $this->registrars);
+        });
+    }
+
+    protected function mapRoutes(Registrar $router, array $registrars): void {
+        foreach ($registrars as $registrar) {
+            if (! class_exists($registrar) || ! is_subclass_of($registrar, RouteRegistrar::class)) {
+                throw new RuntimeException(sprintf(
+                    'Cannot map routes \'%s\', it is not a valid routes class',
+                    $registrar
+                ));
+            }
+
+            (new $registrar)->map($router);
+        }
     }
 }
