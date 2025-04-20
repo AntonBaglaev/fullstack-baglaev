@@ -43,17 +43,17 @@ class OrderController extends Controller
     public function handle(OrderFormRequest $request, NewOrderAction $action): RedirectResponse
     {
 
-//        $order = $action($request);
-//
-//        (new OrderProcess($order))->processes([
-//            new CheckProductQuantities(),
-//            new AssignCustomer(request('customer')),
-//            new AssignProducts(),
-//            new ChangeStateToPending(),
-//            new DecreaseProductsQuantities(),
-//            new ClearCart()
-//        ])->run();
-//
+        $order = $action($request);
+
+        (new OrderProcess($order))->processes([
+            new CheckProductQuantities(),
+            new AssignCustomer(request('customer')),
+            new AssignProducts(),
+            new ChangeStateToPending(),
+            new DecreaseProductsQuantities(),
+            new ClearCart()
+        ])->run();
+
         return redirect()
             ->route('home');
     }
