@@ -10,17 +10,17 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Cart extends Model
 {
     use HasFactory;
-    //use MassPrunable;
+    use MassPrunable;
 
     protected $fillable = [
         'storage_id',
         'user_id'
     ];
 
-//    public function prunable()
-//    {
-//        return static::where('crated_at', '<=', now()->subDay());
-//    }
+    public function prunable()
+    {
+        return static::where('crated_at', '<=', now()->subDay());
+    }
 
     public function cartItems(): HasMany
     {

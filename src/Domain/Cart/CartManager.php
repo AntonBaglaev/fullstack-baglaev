@@ -27,12 +27,12 @@ class CartManager
         app()->bind(CartIdentityStorageContract::class, FakeIdentityStorage::class);
     }
 
-//    public function updateStorageId(string $old, string $current): void
-//    {
-//        Cart::query()
-//            ->where('storage_id', $old)
-//            ->update($this->storedData($current));
-//    }
+    public function updateStorageId(string $old, string $current): void
+    {
+        Cart::query()
+            ->where('storage_id', $old)
+            ->update($this->storedData($current));
+    }
 
     private function storedData(string $id): array
     {
