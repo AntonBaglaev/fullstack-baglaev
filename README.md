@@ -1,29 +1,33 @@
-#  Installation
+# 🛍️ Интернет-магазин на Laravel (DDD + Moonshine)
 
-- php artisan shop:install
-- make .env and .env.testing from .env.example !!!IMPORTANT
+[![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
+[![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
+[![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://mysql.com)
+
+Современный интернет-магазин с архитектурой DDD
 
 
-npm install @tailwindcss/line-clamp
-npm install postcss
+## 🌟 Особенности
+
+✅ **DDD-архитектура**  
+✅ **Полноценный каталог товаров**  
+✅ **Корзина и оформление заказов**  
+✅ **Управление пользователями**  
 
 
-`php artisan make:model Brand -mf` - модель, миграция, фабрика для брендов
+## 🛠 Технологический стек
 
-`php artisan make:model Category -mf` - модель, миграция, фабрика для категорий
+- **Backend**: Laravel 10, DDD
+- **Frontend**: Blade + Tailwind CSS
+- **DB**: MySQL
 
-`php artisan make:model Product -mf` - модель, миграция, фабрика для продуктов
 
-`php artisan migrate:fresh --seed`  - запускаем миграции
+## 🚀 Установка
 
-`php artisan shop:refresh` - удаление дирректории с изображениями перед миграцией и заполнением сидеров
+1. Клонировать репозиторий:
+```bash
+git clone https://github.com/yourname/shop.git
+cd shop
 
-Если при запуске миграции ругается на телеграм api закоментить все модули tg. В данный момент все закомичено
 
-Оччистка кэша конфигурации Laravel
-```
-php artisan config:clear
-php artisan view:clear
-php artisan cache:clear
-```
-App + 
+Работа в выполнена в качестве дипломного проекта по специальности Fullstack - разработчик. 
